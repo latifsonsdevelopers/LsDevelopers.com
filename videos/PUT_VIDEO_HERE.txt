@@ -1,0 +1,2 @@
+Place your hero video here as: hero.mp4
+Recommended: 1920x1080, 10-25 seconds, muted/no audio needed, H.264 mp4, under ~15MB for fast loading.
