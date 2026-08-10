@@ -142,18 +142,42 @@ document.addEventListener('DOMContentLoaded', () => {
     if (e.key === 'ArrowLeft') showNext(-1);
   });
 
-  /* ---------- Contact form (front-end only placeholder) ---------- */
+  /* ---------- Contact form -> FormSubmit (AJAX, stays on page) ---------- */
   const contactForm = document.getElementById('contactForm');
   const formNote = document.getElementById('formNote');
   if (contactForm) {
     contactForm.addEventListener('submit', (e) => {
       e.preventDefault();
-      // NOTE: This form currently only shows a confirmation message.
-      // To actually receive submissions, connect this form to a backend
-      // (e.g. Formspree, Getform, EmailJS) — see the setup notes provided
-      // alongside this project for step-by-step instructions.
-      formNote.textContent = "Thank you! Your request has been noted. Our team will contact you shortly, or WhatsApp us directly for a faster response.";
-      contactForm.reset();
+
+      const submitBtn = contactForm.querySelector('button[type="submit"]');
+      const originalBtnText = submitBtn ? submitBtn.textContent : '';
+      if (submitBtn) { submitBtn.disabled = true; submitBtn.textContent = 'Sending...'; }
+      formNote.textContent = '';
+
+      // Build the FormSubmit AJAX endpoint from the form's own action attribute,
+      // e.g. https://formsubmit.co/you@email.com -> https://formsubmit.co/ajax/you@email.com
+      const ajaxAction = contactForm.action.replace('formsubmit.co/', 'formsubmit.co/ajax/');
+
+      fetch(ajaxAction, {
+        method: 'POST',
+        headers: { 'Accept': 'application/json' },
+        body: new FormData(contactForm)
+      })
+      .then((res) => {
+        if (!res.ok) throw new Error('Network response was not ok');
+        return res.json();
+      })
+      .then(() => {
+        formNote.textContent = "Thank you! Your request has been sent. Our team will contact you shortly, or WhatsApp us directly for a faster response.";
+        contactForm.reset();
+      })
+      .catch(() => {
+        // Fallback: let the browser submit the form normally if the AJAX call fails
+        contactForm.submit();
+      })
+      .finally(() => {
+        if (submitBtn) { submitBtn.disabled = false; submitBtn.textContent = originalBtnText; }
+      });
     });
   }
 
