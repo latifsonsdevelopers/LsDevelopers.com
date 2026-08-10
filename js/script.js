@@ -6,7 +6,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   /* ---------- Preloader ---------- */
   const preloader = document.getElementById('preloader');
-  window.addEventListener('load', () => {
+  window.addEventListener('load', () => { 
     setTimeout(() => preloader && preloader.classList.add('done'), 400);
   });
   // Fallback in case 'load' already fired or media is slow
