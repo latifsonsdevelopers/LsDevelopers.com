@@ -6,7 +6,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   /* ---------- Preloader ---------- */
   const preloader = document.getElementById('preloader');
-  window.addEventListener('load', () => { 
+  window.addEventListener('load', () => {
     setTimeout(() => preloader && preloader.classList.add('done'), 400);
   });
   // Fallback in case 'load' already fired or media is slow
@@ -142,43 +142,12 @@ document.addEventListener('DOMContentLoaded', () => {
     if (e.key === 'ArrowLeft') showNext(-1);
   });
 
-  /* ---------- Contact form -> FormSubmit (AJAX, stays on page) ---------- */
-  const contactForm = document.getElementById('contactForm');
-  const formNote = document.getElementById('formNote');
-  if (contactForm) {
-    contactForm.addEventListener('submit', (e) => {
-      e.preventDefault();
-
-      const submitBtn = contactForm.querySelector('button[type="submit"]');
-      const originalBtnText = submitBtn ? submitBtn.textContent : '';
-      if (submitBtn) { submitBtn.disabled = true; submitBtn.textContent = 'Sending...'; }
-      formNote.textContent = '';
-
-      // Build the FormSubmit AJAX endpoint from the form's own action attribute,
-      // e.g. https://formsubmit.co/you@email.com -> https://formsubmit.co/ajax/you@email.com
-      const ajaxAction = contactForm.action.replace('formsubmit.co/', 'formsubmit.co/ajax/');
-
-      fetch(ajaxAction, {
-        method: 'POST',
-        headers: { 'Accept': 'application/json' },
-        body: new FormData(contactForm)
-      })
-      .then((res) => {
-        if (!res.ok) throw new Error('Network response was not ok');
-        return res.json();
-      })
-      .then(() => {
-        formNote.textContent = "Thank you! Your request has been sent. Our team will contact you shortly, or WhatsApp us directly for a faster response.";
-        contactForm.reset();
-      })
-      .catch(() => {
-        // Fallback: let the browser submit the form normally if the AJAX call fails
-        contactForm.submit();
-      })
-      .finally(() => {
-        if (submitBtn) { submitBtn.disabled = false; submitBtn.textContent = originalBtnText; }
-      });
-    });
-  }
+  /* ---------- Contact form ---------- */
+  /* No JS interception here on purpose — the form submits natively straight
+     to FormSubmit (see the action="" on the <form> tag in index.html).
+     This removes fetch/CORS/file:// as possible points of failure. Once
+     latifsons.developers@gmail.com is activated with FormSubmit, submissions
+     will arrive by email. The browser will redirect to FormSubmit's own
+     confirmation page after submitting. */
 
 });
