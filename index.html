@@ -475,7 +475,11 @@
     </div>
 
     <div class="contact-grid">
-      <form action="https://formsubmit.co/latifsons.developers@gmail.com" method="POST"/>
+      <form class="contact-form fade-up" id="contactForm" action="https://formsubmit.co/latifsons.developers@gmail.com" method="POST">
+        <input type="hidden" name="_subject" value="New inquiry from LS Developers website">
+        <input type="hidden" name="_captcha" value="false">
+        <input type="hidden" name="_template" value="table">
+        <input type="text" name="_honey" style="display:none" tabindex="-1" autocomplete="off">
         <div class="form-row">
           <div class="form-field">
             <label for="cf-name">Full Name</label>
